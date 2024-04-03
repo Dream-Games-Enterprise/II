@@ -35,6 +35,21 @@ public class SceneLoader : MonoBehaviour
         else { isSplashScreen = false; }
     }
 
+    public void MainMenu()
+    {
+        StartSceneLoad(1, 0);
+    }
+
+    public void Options()
+    {
+        StartSceneLoad(2, 0);
+    }
+
+    public void Shop()
+    {
+        StartSceneLoad(3, 0);
+    }
+
     void StartSceneLoad(int scene, int delay)
     {
         StartCoroutine(LoadScene(scene, delay));
