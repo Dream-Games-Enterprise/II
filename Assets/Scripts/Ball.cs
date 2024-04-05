@@ -7,18 +7,32 @@ public class Ball : MonoBehaviour
     Rigidbody2D rb;
     LineRenderer lr;
 
-    float power = 0.005f;
+    float power = 0.01f;
     float maxLength = 1f;
 
     Vector3 dragStartPos;
     bool isDragging = false;
+    public bool ballIsStationary;
 
-    void Start()
+    void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         lr = GetComponent<LineRenderer>();
+    }
+
+    void Start()
+    {
+        ballIsStationary = true;
         lr.positionCount = 0;
     }
+
+    /*void FixedUpdate()
+    {
+        if (ballIsStationary)
+        {
+            ProcessInput()
+        }   
+    }*/
 
     void Update()
     {
@@ -41,25 +55,40 @@ public class Ball : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Paddle"))
+        {
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            ContactPoint2D contact = collision.contacts[0];
+            transform.position = contact.point;
+            ballIsStationary = true;
+        }    
+    }
+
     void ProcessInput(Vector3 screenPos, TouchPhase phase)
     {
-        switch (phase)
+        if (ballIsStationary)
         {
-            case TouchPhase.Began:
-                DragStart(screenPos);
-                break;
-            case TouchPhase.Moved:
-                if (isDragging)
-                {
-                    Dragging(screenPos);
-                }
-                break;
-            case TouchPhase.Ended:
-                if (isDragging)
-                {
-                    DragRelease(screenPos);
-                }
-                break;
+            switch (phase)
+            {
+                case TouchPhase.Began:
+                    DragStart(screenPos);
+                    break;
+                case TouchPhase.Moved:
+                    if (isDragging)
+                    {
+                        Dragging(screenPos);
+                    }
+                    break;
+                case TouchPhase.Ended:
+                    if (isDragging)
+                    {
+                        DragRelease(screenPos);
+                    }
+                    break;
+            }
         }
     }
 
@@ -89,7 +118,7 @@ public class Ball : MonoBehaviour
 
         direction = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
 
-        draggingPos = dragStartPos + direction * maxLength;
+        draggingPos = dragStartPos + direction * maxLength/* * Time.deltaTime*/;
 
         lr.positionCount = 2;
         lr.SetPosition(0, dragStartPos);
@@ -105,9 +134,15 @@ public class Ball : MonoBehaviour
 
         Vector3 direction = (dragReleasePos - dragStartPos).normalized;
 
-        rb.AddForce(direction * power, ForceMode2D.Impulse);
+        rb.AddForce(direction * power /** Time.deltaTime*/, ForceMode2D.Impulse);
+        ballIsStationary = false;
     }
 }
+
+
+
+
+
 
     /*Rigidbody2D rb;
     LineRenderer lr;
