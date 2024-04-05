@@ -6,6 +6,109 @@ public class Ball : MonoBehaviour
 {
     Rigidbody2D rb;
     LineRenderer lr;
+
+    float power = 0.005f;
+    float maxLength = 1f;
+
+    Vector3 dragStartPos;
+    bool isDragging = false;
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        lr = GetComponent<LineRenderer>();
+        lr.positionCount = 0;
+    }
+
+    void Update()
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            ProcessInput(touch.position, touch.phase);
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            ProcessInput(Input.mousePosition, TouchPhase.Began);
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            ProcessInput(Input.mousePosition, TouchPhase.Moved);
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            ProcessInput(Input.mousePosition, TouchPhase.Ended);
+        }
+    }
+
+    void ProcessInput(Vector3 screenPos, TouchPhase phase)
+    {
+        switch (phase)
+        {
+            case TouchPhase.Began:
+                DragStart(screenPos);
+                break;
+            case TouchPhase.Moved:
+                if (isDragging)
+                {
+                    Dragging(screenPos);
+                }
+                break;
+            case TouchPhase.Ended:
+                if (isDragging)
+                {
+                    DragRelease(screenPos);
+                }
+                break;
+        }
+    }
+
+    void DragStart(Vector3 screenPos)
+    {
+        isDragging = true;
+        dragStartPos = Camera.main.ScreenToWorldPoint(screenPos);
+        dragStartPos.z = 0f;
+        lr.positionCount = 1;
+        lr.SetPosition(0, dragStartPos);
+    }
+
+    void Dragging(Vector3 screenPos)
+    {
+        Vector3 draggingPos = Camera.main.ScreenToWorldPoint(screenPos);
+        draggingPos.z = 0f;
+
+        Vector3 direction = (draggingPos - dragStartPos).normalized;
+
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+
+        // Change the clamp range to be from 0 to 180 degrees
+        angle = Mathf.Clamp(angle, 0f, 180f);
+
+        direction = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
+
+        draggingPos = dragStartPos + direction * maxLength;
+
+        lr.positionCount = 2;
+        lr.SetPosition(0, dragStartPos);
+        lr.SetPosition(1, draggingPos);
+    }
+
+    void DragRelease(Vector3 screenPos)
+    {
+        isDragging = false;
+        lr.positionCount = 0;
+        Vector3 dragReleasePos = Camera.main.ScreenToWorldPoint(screenPos);
+        dragReleasePos.z = 0f;
+
+        // Calculate the direction from drag start to release position
+        Vector3 direction = (dragReleasePos - dragStartPos).normalized;
+
+        // Apply force in the direction
+        rb.AddForce(direction * power, ForceMode2D.Impulse);
+    }
+
+    /*Rigidbody2D rb;
+    LineRenderer lr;
     bool isBallStationary;
     bool isAiming;
     Vector2 aimDirection;
@@ -66,7 +169,7 @@ public class Ball : MonoBehaviour
             rb.angularVelocity = 0f;
             isBallStationary = true;
         }    
-    }
+    }*/
 
 
 
