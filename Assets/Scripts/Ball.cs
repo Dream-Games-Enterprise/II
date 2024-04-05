@@ -5,6 +5,36 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     Rigidbody2D rb;
+    bool isAiming;
+
+    void Start()
+    {
+        isAiming = true;
+
+        LaunchBall();
+    }
+
+    void LaunchBall()
+    {
+        if (isAiming)
+        {
+
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+    /*OLD MOVEMENT
+     * Rigidbody2D rb;
 
     float startSpeed = 7.5f;
     float extraSpeed = 1.5f;
@@ -64,5 +94,5 @@ public class Ball : MonoBehaviour
         {
             hitCounter++;
         }
-    }
+    }*/
 }
