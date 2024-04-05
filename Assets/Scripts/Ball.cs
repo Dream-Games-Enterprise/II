@@ -5,21 +5,67 @@ using UnityEngine;
 public class Ball : MonoBehaviour
 {
     Rigidbody2D rb;
+    LineRenderer lr;
+    bool isBallStationary;
     bool isAiming;
+    Vector2 aimDirection;
+    float launchSpeed = 10f;
+
+    void Awake()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        lr = GetComponent<LineRenderer>();
+    }
 
     void Start()
     {
-        isAiming = true;
+        lr.positionCount = 2;
+        lr.enabled = false;
+        isBallStationary = true;
+        isAiming = false;
+    }
 
-        LaunchBall();
+    void Update()
+    {
+        if (isBallStationary)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                isAiming = true;
+                aimDirection = (Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position).normalized;
+            }
+            else if (Input.GetMouseButtonUp(0) && isAiming)
+            {
+                isAiming = false;
+                LaunchBall();
+            }
+
+            UpdateAimLine();
+        }
+    }
+
+    void UpdateAimLine()
+    {
+        lr.enabled = true;
+        lr.SetPosition(0, transform.position);
+        lr.SetPosition(1, transform.position + (Vector3)aimDirection * 5f); // Set the length of the aim line
     }
 
     void LaunchBall()
     {
-        if (isAiming)
-        {
+        rb.velocity = aimDirection * launchSpeed;
+        isBallStationary = false;
+        lr.enabled = false;
+    }
 
-        }
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            isBallStationary = true;
+        }    
     }
 
 
