@@ -66,8 +66,7 @@ public class Ball : MonoBehaviour
     void DragStart(Vector3 screenPos)
     {
         isDragging = true;
-        dragStartPos = Camera.main.ScreenToWorldPoint(screenPos);
-        dragStartPos.z = 0f;
+        dragStartPos = transform.position;
         lr.positionCount = 1;
         lr.SetPosition(0, dragStartPos);
     }
@@ -81,7 +80,6 @@ public class Ball : MonoBehaviour
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-        // Change the clamp range to be from 0 to 180 degrees
         angle = Mathf.Clamp(angle, 0f, 180f);
 
         direction = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
@@ -100,10 +98,8 @@ public class Ball : MonoBehaviour
         Vector3 dragReleasePos = Camera.main.ScreenToWorldPoint(screenPos);
         dragReleasePos.z = 0f;
 
-        // Calculate the direction from drag start to release position
         Vector3 direction = (dragReleasePos - dragStartPos).normalized;
 
-        // Apply force in the direction
         rb.AddForce(direction * power, ForceMode2D.Impulse);
     }
 
