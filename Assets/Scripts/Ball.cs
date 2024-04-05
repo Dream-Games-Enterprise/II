@@ -22,25 +22,22 @@ public class Ball : MonoBehaviour
 
     void Update()
     {
-        if (!isDragging && IsBallMoving())
+        if (Input.touchCount > 0)
         {
-            if (Input.touchCount > 0)
-            {
-                Touch touch = Input.GetTouch(0);
-                ProcessInput(touch.position, touch.phase);
-            }
-            else if (Input.GetMouseButtonDown(0))
-            {
-                ProcessInput(Input.mousePosition, TouchPhase.Began);
-            }
-            else if (Input.GetMouseButton(0))
-            {
-                ProcessInput(Input.mousePosition, TouchPhase.Moved);
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                ProcessInput(Input.mousePosition, TouchPhase.Ended);
-            }
+            Touch touch = Input.GetTouch(0);
+            ProcessInput(touch.position, touch.phase);
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            ProcessInput(Input.mousePosition, TouchPhase.Began);
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            ProcessInput(Input.mousePosition, TouchPhase.Moved);
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            ProcessInput(Input.mousePosition, TouchPhase.Ended);
         }
     }
 
@@ -64,6 +61,11 @@ public class Ball : MonoBehaviour
                 }
                 break;
         }
+    }
+
+    public bool IsBallMoving()
+    {
+        return rb.velocity.magnitude > 0.1f;
     }
 
     void DragStart(Vector3 screenPos)
