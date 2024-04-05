@@ -66,11 +66,6 @@ public class Ball : MonoBehaviour
         }
     }
 
-    public bool IsBallMoving()
-    {
-        return rb.velocity.magnitude > 0.1f;
-    }
-
     void DragStart(Vector3 screenPos)
     {
         isDragging = true;
