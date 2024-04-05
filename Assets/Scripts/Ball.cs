@@ -80,7 +80,7 @@ public class Ball : MonoBehaviour
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
 
-        angle = Mathf.Clamp(angle, 0f, 180f);
+        angle = Mathf.Clamp(angle, 10f, 170f);
 
         direction = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
 
@@ -102,6 +102,7 @@ public class Ball : MonoBehaviour
 
         rb.AddForce(direction * power, ForceMode2D.Impulse);
     }
+}
 
     /*Rigidbody2D rb;
     LineRenderer lr;
@@ -240,4 +241,3 @@ public class Ball : MonoBehaviour
             hitCounter++;
         }
     }*/
-}
