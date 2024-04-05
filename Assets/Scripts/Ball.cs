@@ -22,22 +22,25 @@ public class Ball : MonoBehaviour
 
     void Update()
     {
-        if (Input.touchCount > 0)
+        if (!isDragging && IsBallMoving())
         {
-            Touch touch = Input.GetTouch(0);
-            ProcessInput(touch.position, touch.phase);
-        }
-        else if (Input.GetMouseButtonDown(0))
-        {
-            ProcessInput(Input.mousePosition, TouchPhase.Began);
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            ProcessInput(Input.mousePosition, TouchPhase.Moved);
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            ProcessInput(Input.mousePosition, TouchPhase.Ended);
+            if (Input.touchCount > 0)
+            {
+                Touch touch = Input.GetTouch(0);
+                ProcessInput(touch.position, touch.phase);
+            }
+            else if (Input.GetMouseButtonDown(0))
+            {
+                ProcessInput(Input.mousePosition, TouchPhase.Began);
+            }
+            else if (Input.GetMouseButton(0))
+            {
+                ProcessInput(Input.mousePosition, TouchPhase.Moved);
+            }
+            else if (Input.GetMouseButtonUp(0))
+            {
+                ProcessInput(Input.mousePosition, TouchPhase.Ended);
+            }
         }
     }
 
