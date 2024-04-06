@@ -4,54 +4,41 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    PlayerMovement playerMovement;
     Rigidbody2D rb;
     LineRenderer lr;
 
-    float power = 0.01f;
+    float power = 0.001f;
     float maxLength = 1f;
 
     Vector3 dragStartPos;
     bool isDragging = false;
+    bool canAim = true;
+    float aimDelay = 0.2f;
     public bool ballIsStationary;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
         lr = GetComponent<LineRenderer>();
+        playerMovement = FindObjectOfType<PlayerMovement>();
     }
 
     void Start()
     {
         ballIsStationary = true;
+        isDragging = false;
         lr.positionCount = 0;
+        StartCoroutine(EnableAimingDelay());
     }
 
-    /*void FixedUpdate()
+    void FixedUpdate()
     {
-        if (ballIsStationary)
+        if (ballIsStationary && canAim)
         {
-            ProcessInput()
-        }   
-    }*/
-
-    void Update()
-    {
-        if (Input.touchCount > 0)
-        {
-            Touch touch = Input.GetTouch(0);
-            ProcessInput(touch.position, touch.phase);
-        }
-        else if (Input.GetMouseButtonDown(0))
-        {
-            ProcessInput(Input.mousePosition, TouchPhase.Began);
-        }
-        else if (Input.GetMouseButton(0))
-        {
-            ProcessInput(Input.mousePosition, TouchPhase.Moved);
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            ProcessInput(Input.mousePosition, TouchPhase.Ended);
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            rb.MovePosition(rb.position + (Vector2)transform.right * power * Time.deltaTime);
         }
     }
 
@@ -64,37 +51,38 @@ public class Ball : MonoBehaviour
             ContactPoint2D contact = collision.contacts[0];
             transform.position = contact.point;
             ballIsStationary = true;
-        }    
-    }
-
-    void ProcessInput(Vector3 screenPos, TouchPhase phase)
-    {
-        if (ballIsStationary)
-        {
-            switch (phase)
-            {
-                case TouchPhase.Began:
-                    DragStart(screenPos);
-                    break;
-                case TouchPhase.Moved:
-                    if (isDragging)
-                    {
-                        Dragging(screenPos);
-                    }
-                    break;
-                case TouchPhase.Ended:
-                    if (isDragging)
-                    {
-                        DragRelease(screenPos);
-                    }
-                    break;
-            }
+            StartCoroutine(EnableAimingDelay());
         }
     }
 
-    public bool IsBallMoving()
+    IEnumerator EnableAimingDelay()
     {
-        return rb.velocity.magnitude > 0.1f;
+        yield return new WaitForSeconds(aimDelay);
+        canAim = true;
+    }
+
+    void Update()
+    {
+        if (ballIsStationary && canAim && !isDragging)
+        {
+            ProcessInput();
+        }
+    }
+
+    void ProcessInput()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            DragStart(Input.mousePosition);
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            Dragging(Input.mousePosition);
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            DragRelease(Input.mousePosition);
+        }
     }
 
     void DragStart(Vector3 screenPos)
@@ -113,12 +101,10 @@ public class Ball : MonoBehaviour
         Vector3 direction = (draggingPos - dragStartPos).normalized;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-
         angle = Mathf.Clamp(angle, 10f, 170f);
-
         direction = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
 
-        draggingPos = dragStartPos + direction * maxLength/* * Time.deltaTime*/;
+        draggingPos = dragStartPos + direction * maxLength;
 
         lr.positionCount = 2;
         lr.SetPosition(0, dragStartPos);
@@ -134,8 +120,10 @@ public class Ball : MonoBehaviour
 
         Vector3 direction = (dragReleasePos - dragStartPos).normalized;
 
-        rb.AddForce(direction * power /** Time.deltaTime*/, ForceMode2D.Impulse);
+        rb.AddForce(direction * power, ForceMode2D.Impulse);
         ballIsStationary = false;
+        canAim = false;
+        playerMovement.EnableMovement();
     }
 }
 

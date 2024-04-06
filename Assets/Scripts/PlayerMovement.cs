@@ -8,14 +8,25 @@ public class PlayerMovement : MonoBehaviour
 
     float minX = -2.26f;
     float maxX = 2.26f;
+    bool allowMovement;
 
     void Awake()
     {
         ball = FindObjectOfType<Ball>(); 
     }
 
+    void Start()
+    {
+        if (!ball.ballIsStationary) { allowMovement = true; }
+        else { allowMovement = false; }
+            
+    }
+
     void Update()
     {
+        if (!allowMovement)
+            return;
+
         if (ball.ballIsStationary)
         {
             return;
@@ -34,13 +45,18 @@ public class PlayerMovement : MonoBehaviour
                 Vector3 touchPosition = Camera.main.ScreenToWorldPoint(inputPosition);
                 MovePaddle(touchPosition);
             }
-
-            void MovePaddle(Vector3 touchPosition)
-            {
-                float clampedX = Mathf.Clamp(touchPosition.x, minX, maxX);
-                float clampedY = Mathf.Clamp(touchPosition.y, transform.position.y, transform.position.y);
-                transform.position = new Vector3(clampedX, clampedY, transform.position.z);
-            }
         }
+    }
+
+    void MovePaddle(Vector3 touchPosition)
+    {
+        float clampedX = Mathf.Clamp(touchPosition.x, minX, maxX);
+        float clampedY = Mathf.Clamp(touchPosition.y, transform.position.y, transform.position.y);
+        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
+    }
+
+    public void EnableMovement()
+    {
+        allowMovement = true;
     }
 }
