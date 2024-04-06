@@ -7,6 +7,7 @@ public class Ball : MonoBehaviour
     PlayerMovement playerMovement;
     Rigidbody2D rb;
     LineRenderer lr;
+    CircleCollider2D collider2D;
 
     float power = 0.001f;
     float maxLength = 1f;
@@ -21,6 +22,7 @@ public class Ball : MonoBehaviour
     {
         rb = GetComponent<Rigidbody2D>();
         lr = GetComponent<LineRenderer>();
+        collider2D = GetComponent<CircleCollider2D>();
         playerMovement = FindObjectOfType<PlayerMovement>();
     }
 
@@ -100,7 +102,7 @@ public class Ball : MonoBehaviour
         Vector3 direction = (draggingPos - dragStartPos).normalized;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        angle = Mathf.Clamp(angle, 10f, 170f);
+        angle = Mathf.Clamp(angle, 15f, 165f);
         direction = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
 
         draggingPos = dragStartPos + direction * maxLength;
@@ -122,6 +124,5 @@ public class Ball : MonoBehaviour
         rb.AddForce(direction * power, ForceMode2D.Impulse);
         ballIsStationary = false;
         canAim = false;
-        playerMovement.EnableMovement();
     }
 }
