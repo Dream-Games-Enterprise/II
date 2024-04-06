@@ -4,12 +4,11 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
-    Ball ball;
-
     float minX = -2.26f;
     float maxX = 2.26f;
     bool allowMovement;
 
+<<<<<<< HEAD
     void Awake()
     {
         ball = FindObjectOfType<Ball>(); 
@@ -28,11 +27,19 @@ public class PlayerMovement : MonoBehaviour
             return;
 
         if (ball.ballIsStationary)
+=======
+    void Update()
+    {
+        if (Input.touchCount > 0)
+>>>>>>> parent of 20c7fab (Ball & Paddle Working, Just Need to Fix to Frame-Rate for Consistency)
         {
-            return;
+            Touch touch = Input.GetTouch(0);
+            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
+            MovePaddle(touchPosition);
         }
-        else
+        else if (Input.GetMouseButton(0))
         {
+<<<<<<< HEAD
             if (Input.touchCount > 0)
             {
                 Touch touch = Input.GetTouch(0);
@@ -45,6 +52,18 @@ public class PlayerMovement : MonoBehaviour
                 Vector3 touchPosition = Camera.main.ScreenToWorldPoint(inputPosition);
                 MovePaddle(touchPosition);
             }
+=======
+            Vector3 inputPosition = Input.mousePosition;
+            Vector3 touchPosition = Camera.main.ScreenToWorldPoint(inputPosition);
+            MovePaddle(touchPosition);
+        }
+
+        void MovePaddle(Vector3 touchPosition)
+        {
+            float clampedX = Mathf.Clamp(touchPosition.x, minX, maxX);
+            float clampedY = Mathf.Clamp(touchPosition.y, transform.position.y, transform.position.y);
+            transform.position = new Vector3(clampedX, clampedY, transform.position.z);
+>>>>>>> parent of 20c7fab (Ball & Paddle Working, Just Need to Fix to Frame-Rate for Consistency)
         }
     }
 

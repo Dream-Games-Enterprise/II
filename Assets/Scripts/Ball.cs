@@ -8,11 +8,16 @@ public class Ball : MonoBehaviour
     Rigidbody2D rb;
     LineRenderer lr;
 
+<<<<<<< HEAD
     float power = 0.001f;
+=======
+    float power = 0.005f;
+>>>>>>> parent of 20c7fab (Ball & Paddle Working, Just Need to Fix to Frame-Rate for Consistency)
     float maxLength = 1f;
 
     Vector3 dragStartPos;
     bool isDragging = false;
+<<<<<<< HEAD
     bool canAim = true;
     float aimDelay = 0.2f;
     public bool ballIsStationary;
@@ -28,10 +33,18 @@ public class Ball : MonoBehaviour
     {
         ballIsStationary = true;
         isDragging = false;
+=======
+
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+        lr = GetComponent<LineRenderer>();
+>>>>>>> parent of 20c7fab (Ball & Paddle Working, Just Need to Fix to Frame-Rate for Consistency)
         lr.positionCount = 0;
         StartCoroutine(EnableAimingDelay());
     }
 
+<<<<<<< HEAD
     void FixedUpdate()
     {
         if (ballIsStationary && canAim)
@@ -52,6 +65,48 @@ public class Ball : MonoBehaviour
             transform.position = contact.point;
             ballIsStationary = true;
             StartCoroutine(EnableAimingDelay());
+=======
+    void Update()
+    {
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+            ProcessInput(touch.position, touch.phase);
+        }
+        else if (Input.GetMouseButtonDown(0))
+        {
+            ProcessInput(Input.mousePosition, TouchPhase.Began);
+        }
+        else if (Input.GetMouseButton(0))
+        {
+            ProcessInput(Input.mousePosition, TouchPhase.Moved);
+        }
+        else if (Input.GetMouseButtonUp(0))
+        {
+            ProcessInput(Input.mousePosition, TouchPhase.Ended);
+        }
+    }
+
+    void ProcessInput(Vector3 screenPos, TouchPhase phase)
+    {
+        switch (phase)
+        {
+            case TouchPhase.Began:
+                DragStart(screenPos);
+                break;
+            case TouchPhase.Moved:
+                if (isDragging)
+                {
+                    Dragging(screenPos);
+                }
+                break;
+            case TouchPhase.Ended:
+                if (isDragging)
+                {
+                    DragRelease(screenPos);
+                }
+                break;
+>>>>>>> parent of 20c7fab (Ball & Paddle Working, Just Need to Fix to Frame-Rate for Consistency)
         }
     }
 
@@ -121,16 +176,14 @@ public class Ball : MonoBehaviour
         Vector3 direction = (dragReleasePos - dragStartPos).normalized;
 
         rb.AddForce(direction * power, ForceMode2D.Impulse);
+<<<<<<< HEAD
         ballIsStationary = false;
         canAim = false;
         playerMovement.EnableMovement();
+=======
+>>>>>>> parent of 20c7fab (Ball & Paddle Working, Just Need to Fix to Frame-Rate for Consistency)
     }
 }
-
-
-
-
-
 
     /*Rigidbody2D rb;
     LineRenderer lr;

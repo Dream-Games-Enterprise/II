@@ -2185,7 +2185,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd018691917a7440a754969d9466075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballIsStationary: 0
 --- !u!4 &1589781345
 Transform:
   m_ObjectHideFlags: 0
@@ -2490,7 +2489,7 @@ GameObject:
   - component: {fileID: 1861473615}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Paddle
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
