@@ -110,6 +110,7 @@ public class Ball : MonoBehaviour
         }
     }
 
+<<<<<<< HEAD
     IEnumerator EnableAimingDelay()
     {
         yield return new WaitForSeconds(aimDelay);
@@ -140,6 +141,8 @@ public class Ball : MonoBehaviour
         }
     }
 
+=======
+>>>>>>> parent of 3c05da4 (Merge pull request #1 from Dream-Games-Enterprise/Ball-&-Paddle-Link)
     void DragStart(Vector3 screenPos)
     {
         isDragging = true;
