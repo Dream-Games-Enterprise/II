@@ -1158,6 +1158,37 @@ MonoBehaviour:
   lineRendererPivot: {fileID: 1589781345}
   minAngle: 15
   maxAngle: 165
+--- !u!1 &631857217
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 631857218}
+  m_Layer: 0
+  m_Name: Ball_Start_Pos
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &631857218
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 631857217}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.3, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1861473612}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &764775927
 GameObject:
   m_ObjectHideFlags: 0
@@ -1460,7 +1491,7 @@ GameObject:
   - component: {fileID: 941896310}
   m_Layer: 0
   m_Name: Border_Bottom
-  m_TagString: Untagged
+  m_TagString: Base
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1542,7 +1573,7 @@ BoxCollider2D:
   m_Enabled: 1
   m_Density: 1
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
   m_Offset: {x: 0, y: 0}
@@ -1651,7 +1682,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: x  ***
+  m_text: x *
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 7ae70fdb4fb2bab41a9bd1f2d4adec37, type: 2}
   m_sharedMaterial: {fileID: 9210085724303665028, guid: 7ae70fdb4fb2bab41a9bd1f2d4adec37, type: 2}
@@ -1685,7 +1716,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 1
-  m_HorizontalAlignment: 4
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -1971,6 +2002,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ad369b3561cdd49a7f01515285c488, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  blocksInLevel: 0
+  amountOfBlocksDestroyed: 0
+  lives: 3
+  textLives: {fileID: 1002944433}
 --- !u!4 &1403494331
 Transform:
   m_ObjectHideFlags: 0
@@ -2332,6 +2367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bcd018691917a7440a754969d9466075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ballStartPos: {fileID: 631857218}
   canAim: 1
   ballIsStationary: 0
 --- !u!4 &1589781345
@@ -2655,7 +2691,8 @@ Transform:
   m_LocalPosition: {x: 0, y: -4, z: 0}
   m_LocalScale: {x: 1, y: 0.6, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 631857218}
   m_Father: {fileID: 0}
   m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
@@ -2747,7 +2784,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.2, y: 1.6}
+  m_Size: {x: 0.2, y: 1.5}
   m_EdgeRadius: 0
 --- !u!1 &1921603792
 GameObject:

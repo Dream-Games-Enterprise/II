@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    LevelManager levelManager;
     AutoAimer autoAimer;
     PlayerMovement playerMovement;
     Rigidbody2D rb;
     LineRenderer lr;
     CircleCollider2D collider2D;
+    [SerializeField] Transform ballStartPos;
 
     float power = 0.001f;
     float maxLength = 1f;
@@ -25,12 +27,14 @@ public class Ball : MonoBehaviour
         rb = GetComponent<Rigidbody2D>();
         lr = GetComponent<LineRenderer>();
         collider2D = GetComponent<CircleCollider2D>();
+        levelManager = FindObjectOfType<LevelManager>();
         playerMovement = FindObjectOfType<PlayerMovement>();
         autoAimer = FindObjectOfType<AutoAimer>();
     }
 
     void Start()
     {
+        transform.position = ballStartPos.transform.position;
         ballIsStationary = true;
         isInitialLaunch = true;
         lr.positionCount = 0;
@@ -62,6 +66,18 @@ public class Ball : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Base"))
+        {
+            rb.velocity = Vector2.zero;
+            rb.angularVelocity = 0f;
+            levelManager.RemoveLife();
+            ResetBall();
+            //Stop auto aimer
+        }    
+    }
+
     IEnumerator EnableAimingDelay()
     {
         yield return new WaitForSeconds(aimDelay);
@@ -72,22 +88,35 @@ public class Ball : MonoBehaviour
     {
         if (ballIsStationary && canAim && isInitialLaunch)
         {
+            autoAimer.DisableLR();
             ProcessLaunchInput();
         }
         else if (ballIsStationary && canAim && !isInitialLaunch)
         {
-            if (Input.GetKeyDown(KeyCode.Space))
+            if (Input.GetKeyDown(KeyCode.Mouse0))
             {
+                autoAimer.EnableLR();
                 LaunchBall();
             }
         }
     }
 
+    void ResetBall()
+    {
+        transform.position = ballStartPos.transform.position;
+        ballIsStationary = true;
+        isInitialLaunch = true;
+        StartCoroutine(EnableAimingDelay());
+    }
+
     void LaunchBall()
     {
-        Vector3 direction = autoAimer.GetAimDirection();
-        rb.AddForce(direction * power, ForceMode2D.Impulse);
-        ballIsStationary = false;
+        if (ballIsStationary && !isInitialLaunch)
+        {
+            Vector3 direction = autoAimer.GetAimDirection();
+            rb.AddForce(direction * power, ForceMode2D.Impulse);
+            ballIsStationary = false;
+        }
     }
 
 

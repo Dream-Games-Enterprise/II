@@ -4,15 +4,24 @@ using UnityEngine;
 
 public class Block : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    LevelManager levelManager;
+
+    void Awake()
     {
-        
+        levelManager = FindObjectOfType<LevelManager>();    
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        levelManager.GetBlocks();
+    }
+
+    void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.name == "Ball")
+        {
+            levelManager.RemoveBlock();
+            Destroy(gameObject);
+        }
     }
 }

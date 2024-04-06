@@ -58,4 +58,9 @@ public class AutoAimer : MonoBehaviour
     {
         autoLR.enabled = true;
     }
+
+    public void DisableLR()
+    {
+        autoLR.enabled = false;
+    }
 }
