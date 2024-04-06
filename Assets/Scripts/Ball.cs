@@ -15,7 +15,7 @@ public class Ball : MonoBehaviour
     Vector3 dragStartPos;
     bool isDragging = false;
     public bool canAim = true;
-    float aimDelay = 0.4f;
+    float aimDelay = 0.3f;
     public bool ballIsStationary;
 
     void Awake()
@@ -61,6 +61,7 @@ public class Ball : MonoBehaviour
     {
         yield return new WaitForSeconds(aimDelay);
         canAim = true;
+        //lr.enabled = true; //have it so that the line renderer will only display after here
     }
 
     void Update()
@@ -93,6 +94,7 @@ public class Ball : MonoBehaviour
         dragStartPos = transform.position;
         lr.positionCount = 1;
         lr.SetPosition(0, dragStartPos);
+        lr.enabled = true;
     }
 
     void Dragging(Vector3 screenPos)
@@ -111,6 +113,7 @@ public class Ball : MonoBehaviour
         lr.positionCount = 2;
         lr.SetPosition(0, dragStartPos);
         lr.SetPosition(1, draggingPos);
+        lr.enabled = true;
     }
 
     void DragRelease(Vector3 screenPos)
@@ -125,5 +128,6 @@ public class Ball : MonoBehaviour
         rb.AddForce(direction * power, ForceMode2D.Impulse);
         ballIsStationary = false;
         canAim = false;
+        lr.enabled = false;
     }
 }
