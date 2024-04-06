@@ -5,40 +5,54 @@ using UnityEngine;
 public class AutoAimer : MonoBehaviour
 {
     LineRenderer autoLR;
+    public Transform lineRendererPivot;
+    public float minAngle = 0f;
+    public float maxAngle = 360f;
+    float lerpSpeed = 0.75f;
+    float lineLength = 1f;
+
+    private float currentAngle;
 
     void Awake()
     {
         autoLR = GetComponent<LineRenderer>();    
     }
 
-    public Transform lineRendererPivot; // Empty GameObject where the line renderer should rotate around
-    public float minAngle = 15f;
-    public float maxAngle = 165f;
-    public float lerpSpeed = 1f;
-
-    private float currentAngle;
-
     void Start()
     {
-        currentAngle = minAngle; // Start at the minimum angle
+        currentAngle = minAngle;
+        lineRendererPivot.rotation = Quaternion.Euler(0f, 0f, 90f);
     }
 
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // Stop rotating when player gives input
             enabled = false;
         }
 
-        // Interpolate between min and max angles
         currentAngle = Mathf.LerpAngle(minAngle, maxAngle, Mathf.PingPong(Time.time * lerpSpeed, 1f));
 
-        // Convert angle to a direction vector
         Vector3 direction = Quaternion.Euler(0, 0, currentAngle) * Vector3.right;
 
-        // Set the positions of the line renderer
+        direction.Normalize();
+        direction *= lineLength;
+
         autoLR.SetPosition(0, lineRendererPivot.position);
-        autoLR.SetPosition(1, lineRendererPivot.position + direction * 10f);
+        autoLR.SetPosition(1, lineRendererPivot.position + direction);
+    }
+
+    public Vector3 GetAimDirection()
+    {
+        float currentAngle = Mathf.LerpAngle(minAngle, maxAngle, Mathf.PingPong(Time.time * lerpSpeed, 1f));
+        Vector3 direction = Quaternion.Euler(0, 0, currentAngle) * Vector3.right;
+        direction.Normalize();
+        return direction;
+    }
+
+    void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawRay(lineRendererPivot.position, lineRendererPivot.right * 2);
     }
 }

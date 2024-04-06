@@ -37,7 +37,7 @@ public class Ball : MonoBehaviour
         StartCoroutine(EnableAimingDelay());
     }
 
-    void FixedUpdate()
+    /*void FixedUpdate()
     {
         if (ballIsStationary && canAim)
         {
@@ -45,7 +45,7 @@ public class Ball : MonoBehaviour
             rb.angularVelocity = 0f;
             rb.MovePosition(rb.position + (Vector2)transform.right * power * Time.deltaTime);
         }
-    }
+    }*/
 
     void OnCollisionEnter2D(Collision2D collision)
     {
@@ -69,11 +69,29 @@ public class Ball : MonoBehaviour
 
     void Update()
     {
-        if (ballIsStationary && canAim)
+        if (ballIsStationary && canAim && isInitialLaunch)
         {
             ProcessLaunchInput();
         }
+        else if (ballIsStationary && canAim && !isInitialLaunch)
+        {
+            if (Input.GetKeyDown(KeyCode.Space))
+            {
+                LaunchBall();
+            }
+        }
     }
+
+    void LaunchBall()
+    {
+        Vector3 direction = autoAimer.GetAimDirection();
+
+        // Add force to launch the ball in the direction the AutoAimer is pointing
+        rb.AddForce(direction * power, ForceMode2D.Impulse);
+
+        ballIsStationary = false;
+    }
+
 
     void ProcessLaunchInput()
     {
