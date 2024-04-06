@@ -57,6 +57,7 @@ public class Ball : MonoBehaviour
             transform.position = contact.point;
             //set lr to match middle of ball here
             ballIsStationary = true;
+            autoAimer.EnableLR();
             StartCoroutine(EnableAimingDelay());
         }
     }
@@ -85,10 +86,7 @@ public class Ball : MonoBehaviour
     void LaunchBall()
     {
         Vector3 direction = autoAimer.GetAimDirection();
-
-        // Add force to launch the ball in the direction the AutoAimer is pointing
         rb.AddForce(direction * power, ForceMode2D.Impulse);
-
         ballIsStationary = false;
     }
 

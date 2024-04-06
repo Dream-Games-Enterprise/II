@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class AutoAimer : MonoBehaviour
 {
+    Ball ball;
+
     LineRenderer autoLR;
     public Transform lineRendererPivot;
     public float minAngle = 0f;
@@ -15,7 +17,8 @@ public class AutoAimer : MonoBehaviour
 
     void Awake()
     {
-        autoLR = GetComponent<LineRenderer>();    
+        autoLR = GetComponent<LineRenderer>();
+        ball = FindObjectOfType<Ball>();
     }
 
     void Start()
@@ -26,11 +29,11 @@ public class AutoAimer : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            enabled = false;
-        }
+        MoveLine();
+    }
 
+    void MoveLine()
+    {
         currentAngle = Mathf.LerpAngle(minAngle, maxAngle, Mathf.PingPong(Time.time * lerpSpeed, 1f));
 
         Vector3 direction = Quaternion.Euler(0, 0, currentAngle) * Vector3.right;
@@ -47,12 +50,12 @@ public class AutoAimer : MonoBehaviour
         float currentAngle = Mathf.LerpAngle(minAngle, maxAngle, Mathf.PingPong(Time.time * lerpSpeed, 1f));
         Vector3 direction = Quaternion.Euler(0, 0, currentAngle) * Vector3.right;
         direction.Normalize();
+        autoLR.enabled = false;
         return direction;
     }
 
-    void OnDrawGizmos()
+    public void EnableLR()
     {
-        Gizmos.color = Color.red;
-        Gizmos.DrawRay(lineRendererPivot.position, lineRendererPivot.right * 2);
+        autoLR.enabled = true;
     }
 }
