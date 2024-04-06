@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Ball : MonoBehaviour
 {
+    AutoAimer autoAimer;
     PlayerMovement playerMovement;
     Rigidbody2D rb;
     LineRenderer lr;
@@ -17,6 +18,7 @@ public class Ball : MonoBehaviour
     public bool canAim = true;
     float aimDelay = 0.3f;
     public bool ballIsStationary;
+    bool isInitialLaunch;
 
     void Awake()
     {
@@ -24,11 +26,13 @@ public class Ball : MonoBehaviour
         lr = GetComponent<LineRenderer>();
         collider2D = GetComponent<CircleCollider2D>();
         playerMovement = FindObjectOfType<PlayerMovement>();
+        autoAimer = FindObjectOfType<AutoAimer>();
     }
 
     void Start()
     {
         ballIsStationary = true;
+        isInitialLaunch = true;
         lr.positionCount = 0;
         StartCoroutine(EnableAimingDelay());
     }
@@ -61,18 +65,17 @@ public class Ball : MonoBehaviour
     {
         yield return new WaitForSeconds(aimDelay);
         canAim = true;
-        //lr.enabled = true; //have it so that the line renderer will only display after here
     }
 
     void Update()
     {
         if (ballIsStationary && canAim)
         {
-            ProcessInput();
+            ProcessLaunchInput();
         }
     }
 
-    void ProcessInput()
+    void ProcessLaunchInput()
     {
         if (Input.GetMouseButtonDown(0) && canAim)
         {
@@ -90,30 +93,36 @@ public class Ball : MonoBehaviour
 
     void DragStart(Vector3 screenPos)
     {
-        isDragging = true;
-        dragStartPos = transform.position;
-        lr.positionCount = 1;
-        lr.SetPosition(0, dragStartPos);
-        lr.enabled = true;
+        if (isInitialLaunch)
+        {
+            isDragging = true;
+            dragStartPos = transform.position;
+            lr.positionCount = 1;
+            lr.SetPosition(0, dragStartPos);
+            lr.enabled = true;
+        }
     }
 
     void Dragging(Vector3 screenPos)
     {
-        Vector3 draggingPos = Camera.main.ScreenToWorldPoint(screenPos);
-        draggingPos.z = 0f;
+        if (isInitialLaunch)
+        {
+            Vector3 draggingPos = Camera.main.ScreenToWorldPoint(screenPos);
+            draggingPos.z = 0f;
 
-        Vector3 direction = (draggingPos - dragStartPos).normalized;
+            Vector3 direction = (draggingPos - dragStartPos).normalized;
 
-        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-        angle = Mathf.Clamp(angle, 15f, 165f);
-        direction = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
+            float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
+            angle = Mathf.Clamp(angle, 15f, 165f);
+            direction = Quaternion.AngleAxis(angle, Vector3.forward) * Vector3.right;
 
-        draggingPos = dragStartPos + direction * maxLength;
+            draggingPos = dragStartPos + direction * maxLength;
 
-        lr.positionCount = 2;
-        lr.SetPosition(0, dragStartPos);
-        lr.SetPosition(1, draggingPos);
-        lr.enabled = true;
+            lr.positionCount = 2;
+            lr.SetPosition(0, dragStartPos);
+            lr.SetPosition(1, draggingPos);
+            lr.enabled = true;
+        }
     }
 
     void DragRelease(Vector3 screenPos)
@@ -129,5 +138,6 @@ public class Ball : MonoBehaviour
         ballIsStationary = false;
         canAim = false;
         lr.enabled = false;
+        isInitialLaunch = false;
     }
 }
