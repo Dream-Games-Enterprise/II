@@ -6,7 +6,6 @@ public class PlayerMovement : MonoBehaviour
 {
     float minX = -2.26f;
     float maxX = 2.26f;
-    bool allowMovement;
 
 <<<<<<< HEAD
     void Awake()
@@ -14,18 +13,8 @@ public class PlayerMovement : MonoBehaviour
         ball = FindObjectOfType<Ball>(); 
     }
 
-    void Start()
-    {
-        if (!ball.ballIsStationary) { allowMovement = true; }
-        else { allowMovement = false; }
-            
-    }
-
     void Update()
     {
-        if (!allowMovement)
-            return;
-
         if (ball.ballIsStationary)
 =======
     void Update()
@@ -52,6 +41,7 @@ public class PlayerMovement : MonoBehaviour
                 Vector3 touchPosition = Camera.main.ScreenToWorldPoint(inputPosition);
                 MovePaddle(touchPosition);
             }
+<<<<<<< HEAD
 =======
             Vector3 inputPosition = Input.mousePosition;
             Vector3 touchPosition = Camera.main.ScreenToWorldPoint(inputPosition);
@@ -64,18 +54,15 @@ public class PlayerMovement : MonoBehaviour
             float clampedY = Mathf.Clamp(touchPosition.y, transform.position.y, transform.position.y);
             transform.position = new Vector3(clampedX, clampedY, transform.position.z);
 >>>>>>> parent of 20c7fab (Ball & Paddle Working, Just Need to Fix to Frame-Rate for Consistency)
+=======
+
+            void MovePaddle(Vector3 touchPosition)
+            {
+                float clampedX = Mathf.Clamp(touchPosition.x, minX, maxX);
+                float clampedY = Mathf.Clamp(touchPosition.y, transform.position.y, transform.position.y);
+                transform.position = new Vector3(clampedX, clampedY, transform.position.z);
+            }
+>>>>>>> parent of cc8c119 (ignore)
         }
-    }
-
-    void MovePaddle(Vector3 touchPosition)
-    {
-        float clampedX = Mathf.Clamp(touchPosition.x, minX, maxX);
-        float clampedY = Mathf.Clamp(touchPosition.y, transform.position.y, transform.position.y);
-        transform.position = new Vector3(clampedX, clampedY, transform.position.z);
-    }
-
-    public void EnableMovement()
-    {
-        allowMovement = true;
     }
 }
