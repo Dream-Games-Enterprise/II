@@ -14,8 +14,8 @@ public class Ball : MonoBehaviour
 
     Vector3 dragStartPos;
     bool isDragging = false;
-    bool canAim = true;
-    float aimDelay = 0.2f;
+    public bool canAim = true;
+    float aimDelay = 0.4f;
     public bool ballIsStationary;
 
     void Awake()
@@ -51,6 +51,7 @@ public class Ball : MonoBehaviour
             rb.angularVelocity = 0f;
             ContactPoint2D contact = collision.contacts[0];
             transform.position = contact.point;
+            //set lr to match middle of ball here
             ballIsStationary = true;
             StartCoroutine(EnableAimingDelay());
         }
@@ -72,15 +73,15 @@ public class Ball : MonoBehaviour
 
     void ProcessInput()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && canAim)
         {
             DragStart(Input.mousePosition);
         }
-        else if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0) && canAim)
         {
             Dragging(Input.mousePosition);
         }
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0) && isDragging)
         {
             DragRelease(Input.mousePosition);
         }
