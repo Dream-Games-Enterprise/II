@@ -15,33 +15,15 @@ public class LevelManager : MonoBehaviour
     [SerializeField] int lives = 3;
     [SerializeField] TMP_Text textLives;
 
-    //void LevelToLoad() //from scriptable object? i don't know best way to load level of blocks
 
     void Start()
     {
-        //load level blocks here without scene loader?
+        //LoadLevelBlocks();
         textLives.text = "x " + lives.ToString();
     }
 
     public void LoadLevelBlocks(LevelDataSO levelDataSO)
     {
-        //
-        foreach (var blockData in levelDataSO.blocks)
-        {
-            Vector3 position = new Vector3(blockData.position.x, blockData.position.y, 0f);
-
-            GameObject blockPrefab = GetBlockPrefab(blockData.type);
-
-            if (blockPrefab != null)
-            {
-                Instantiate(blockPrefab, position, Quaternion.identity);
-                // Optionally, you can keep track of the instantiated blocks or their references for further interaction.
-            }
-            else
-            {
-                Debug.LogError("Missing block prefab for type: " + blockData.type);
-            }
-        }
     }
 
     GameObject GetBlockPrefab(BlockType type)

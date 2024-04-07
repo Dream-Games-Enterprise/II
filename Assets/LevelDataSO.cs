@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "NewLevelData", menuName = "LevelData")]
-public class LevelDataSO : MonoBehaviour
+public class LevelDataSO : ScriptableObject
 {
     [System.Serializable]
     public struct BlockData
     {
-        public Vector2Int position;
-        public BlockType type;
+        public GameObject blockWithinGame;
+        public Vector2 pos;
     }
 
     public BlockData[] blocks;
