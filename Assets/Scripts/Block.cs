@@ -5,6 +5,7 @@ using UnityEngine;
 public class Block : MonoBehaviour
 {
     LevelManager levelManager;
+    [SerializeField] bool notBreakable;
 
     void Awake()
     {
@@ -13,7 +14,11 @@ public class Block : MonoBehaviour
 
     void Start()
     {
-        levelManager.GetBlocks();
+        if (notBreakable)
+        {
+            return;
+        }
+        else { levelManager.GetBlocks(); }
     }
 
     void OnCollisionEnter2D(Collision2D collision)
